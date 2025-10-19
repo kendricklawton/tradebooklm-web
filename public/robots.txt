@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /$
+Allow: /help
+Allow: /pricing
+Allow: /privacy
+Allow: /sign-in
+Allow: /sign-in-help
+Allow: /sign-up
+Allow: /terms
+Allow: /sitemap.xml
+Disallow: /
+
+Sitemap: https://tradebooklm.com/sitemap.xml
