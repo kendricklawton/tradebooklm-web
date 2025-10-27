@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getSignInUrl, withAuth } from "@workos-inc/authkit-nextjs";
-import HeaderDropdownMenu from "./HeaderDropdownMenu";
+import { signOut } from "@workos-inc/authkit-nextjs";
 
 export default async function Header() {
   const { user } = await withAuth();
@@ -17,10 +17,21 @@ export default async function Header() {
       </Link>
       <div>
         {user ? (
-          <HeaderDropdownMenu user={user} />
+          <form
+            action={async () => {
+              await signOut();
+            }}
+          >
+            <button
+              type="submit"
+              className="py-2 px-4 bg-black  text-white rounded-4xl hover:bg-gray-500 cursor-pointer"
+            >
+              Sign out
+            </button>
+          </form>
         ) : (
           <Link href={signInUrl}>
-            <span className="py-2 px-4 bg-black text-white rounded-4xl hover:bg-gray-600">
+            <span className="py-2 px-4 bg-black  text-white rounded-4xl hover:bg-gray-500 cursor-pointer">
               Sign in
             </span>
           </Link>

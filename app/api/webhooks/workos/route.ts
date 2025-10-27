@@ -2,10 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { workos } from "@/lib/workos";
 import { getAuthToken } from "@/lib/google-auth";
 
-export const config = {
-  runtime: "nodejs",
-};
-
 export async function POST(request: NextRequest) {
   const webhookSecret = process.env.WORKOS_WEBHOOK_SECRET;
   const apiUrl = process.env.TRADEBOOKLM_API_URL;
