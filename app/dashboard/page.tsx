@@ -1,7 +1,7 @@
 import Header from "@/components/Header";
 import { withAuth } from "@workos-inc/authkit-nextjs";
 
-export default async function DashboardPage() {
+export default async function Page() {
   const { user } = await withAuth();
 
   // Protect the route. If the user is not authenticated, you can redirect them.

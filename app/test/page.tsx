@@ -1,15 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { getTestService } from "@/lib/apiService";
+// import { getTestService } from "@/lib/apiService";
 
 export default function Page() {
   const [testData, setTestData] = useState<string>();
 
   const handleFetchTestData = async () => {
     try {
-      const data = await getTestService();
-      setTestData(data);
+      const data = await fetch(`/api/test`, {
+        method: "GET",
+      });
+      const response = await data.json();
+      setTestData(response);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
