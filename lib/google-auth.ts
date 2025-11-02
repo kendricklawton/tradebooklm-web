@@ -3,6 +3,7 @@ import { ExternalAccountClient } from "google-auth-library";
 
 console.log("Environment:", process.env.NODE_ENV);
 const GCP_PROJECT_NUMBER = process.env.GCP_PROJECT_NUMBER;
+// const GCP_PROJECT_ID = process.env.GCP_PROJECT_ID;
 const GCP_SERVICE_ACCOUNT_EMAIL = process.env.GCP_SERVICE_ACCOUNT_EMAIL;
 const GCP_WORKLOAD_IDENTITY_POOL_ID = process.env.GCP_WORKLOAD_IDENTITY_POOL_ID;
 const GCP_WORKLOAD_IDENTITY_POOL_PROVIDER_ID =
