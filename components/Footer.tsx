@@ -60,7 +60,7 @@ const Footer = () => {
         </ul>
       </div>
 
-      <div className="min-h-[4rem] flex items-center">
+      <div className="min-h-16 flex items-center">
         <p>
           © 2025{" "}
           <Link

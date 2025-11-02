@@ -7,7 +7,7 @@ export default async function Header() {
   const signInUrl = await getSignInUrl();
 
   return (
-    <header className="flex items-center justify-between min-h-[4rem] w-full sticky top-0 z-50 bg-white px-[4svw]">
+    <header className="flex items-center justify-between min-h-16 w-full sticky top-0 z-50 bg-white px-[4svw]">
       <Link
         href={user ? "/dashboard" : "/"}
         className="transition-transform duration-200 hover:scale-105"
