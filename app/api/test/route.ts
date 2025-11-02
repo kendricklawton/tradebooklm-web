@@ -49,10 +49,10 @@ export async function GET(): Promise<NextResponse> {
   try {
     const authClient = await getAuthClient();
 
-    const serviceUrl = `${process.env.TRADEBOOKLM_API_URL}/test`;
+    const apiUrl = `${process.env.TRADEBOOKLM_API_URL}/test`;
 
     const response = await authClient.request({
-      url: serviceUrl,
+      url: apiUrl,
       method: "GET",
     });
 

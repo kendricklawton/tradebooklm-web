@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { workos } from "@/lib/workos";
-import { getAuthToken } from "@/lib/google-auth";
+import { getAuthClient } from "@/lib/gcp-auth"; // Adjust path if needed
 
 export async function POST(request: NextRequest) {
   const webhookSecret = process.env.WORKOS_WEBHOOK_SECRET;
@@ -47,26 +47,26 @@ export async function POST(request: NextRequest) {
     }
     const userData = event.data;
 
-    let goApiUrl: string;
-    let goApiMethod: "POST" | "PATCH" | "DELETE";
-    let goApiBody: unknown = undefined;
+    let webhookApiUrl: string;
+    let webhookApiMethod: "POST" | "PATCH" | "DELETE";
+    let webhookApiBody: unknown = undefined;
 
     switch (eventType) {
       case "user.created":
-        goApiMethod = "POST";
-        goApiUrl = `${apiUrl}/user`;
-        goApiBody = userData;
+        webhookApiMethod = "POST";
+        webhookApiUrl = `${apiUrl}/user`;
+        webhookApiBody = userData;
         break;
 
       case "user.updated":
-        goApiMethod = "PATCH";
-        goApiUrl = `${apiUrl}/user/${userData.id}`;
-        goApiBody = userData;
+        webhookApiMethod = "PATCH";
+        webhookApiUrl = `${apiUrl}/user/${userData.id}`;
+        webhookApiBody = userData;
         break;
 
       case "user.deleted":
-        goApiMethod = "DELETE";
-        goApiUrl = `${apiUrl}/user/${userData.id}`;
+        webhookApiMethod = "DELETE";
+        webhookApiUrl = `${apiUrl}/user/${userData.id}`;
         break;
 
       default:
@@ -74,29 +74,26 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ received: true });
     }
 
-    console.log(`Forwarding ${eventType} via ${goApiMethod} to ${goApiUrl}`);
+    console.log(
+      `Forwarding ${eventType} via ${webhookApiMethod} to ${webhookApiUrl}`,
+    );
 
-    let authToken = undefined;
-    authToken = await getAuthToken();
-
-    const goApiResponse = await fetch(goApiUrl, {
-      method: goApiMethod,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: goApiBody ? JSON.stringify(goApiBody) : undefined,
+    const authClient = await getAuthClient();
+    const response = await authClient.request({
+      url: webhookApiUrl,
+      method: webhookApiMethod,
+      body: webhookApiBody ? JSON.stringify(webhookApiBody) : undefined,
     });
 
-    if (!goApiResponse.ok) {
+    if (!response.ok) {
       console.error(
-        `Failed to forward ${eventType} to TradebookLM API. Status: ${goApiResponse.status}`,
+        `Failed to forward ${eventType} to TradebookLM API. Status: ${response.status}`,
       );
       return NextResponse.json(
         {
           error: `Failed to forward ${eventType} to TradebookLM API`,
         },
-        { status: goApiResponse.status },
+        { status: response.status },
       );
     }
 
