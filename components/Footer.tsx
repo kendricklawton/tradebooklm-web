@@ -3,7 +3,7 @@ import Link from "next/link";
 const Footer = () => {
   return (
     <footer className="w-full flex flex-col items-start px-[4svw] bg-gray-50">
-      <div className="flex flex-row justify-start w-full space-x-4 pb-8 pt-16">
+      {/*<div className="flex flex-row justify-start w-full space-x-4 pb-8 pt-16">
         <ul className="flex flex-col gap-2 min-w-32">
           <h3 className="text-xl">Product</h3>
           <li>
@@ -58,7 +58,7 @@ const Footer = () => {
             </Link>
           </li>
         </ul>
-      </div>
+      </div>*/}
 
       <div className="min-h-16 flex items-center">
         <p>

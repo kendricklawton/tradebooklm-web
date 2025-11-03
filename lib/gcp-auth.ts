@@ -23,6 +23,5 @@ export async function getAuthClient() {
     },
   });
 
-  console.log("Auth client created");
   return auth.getIdTokenClient(targetAudience);
 }

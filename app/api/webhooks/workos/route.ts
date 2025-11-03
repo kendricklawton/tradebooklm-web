@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { workos } from "@/lib/workos";
-import { getAuthClient } from "@/lib/gcp-auth"; // Adjust path if needed
+import { getAuthClient } from "@/lib/gcp-auth";
+import { GaxiosErrorStatus } from "@/interfaces/gaxios-error-status";
 
 export async function POST(request: NextRequest) {
   const webhookSecret = process.env.WORKOS_WEBHOOK_SECRET;
   const apiUrl = process.env.TRADEBOOKLM_API_URL;
 
-  // Validate critical server configuration
   if (!webhookSecret || !apiUrl) {
     console.error(
       "Missing critical environment variables for webhook handler.",
@@ -79,38 +79,26 @@ export async function POST(request: NextRequest) {
     );
 
     const authClient = await getAuthClient();
-    const response = await authClient.request({
+    await authClient.request({
       url: webhookApiUrl,
       method: webhookApiMethod,
       body: webhookApiBody ? JSON.stringify(webhookApiBody) : undefined,
     });
 
-    if (!response.ok) {
-      console.error(
-        `Failed to forward ${eventType} to TradebookLM API. Status: ${response.status}`,
-      );
-      return NextResponse.json(
-        {
-          error: `Failed to forward ${eventType} to TradebookLM API`,
-        },
-        { status: response.status },
-      );
-    }
-
     return NextResponse.json({ received: true });
   } catch (error) {
-    console.error("Webhook processing error:", error);
-    // If the error is due to signature, it's a client error
+    console.error("Webhook Route Error:", error);
     if (error instanceof Error && error.message.includes("signature")) {
       return NextResponse.json(
         { error: "Invalid webhook signature" },
         { status: 400 },
       );
     }
-    // Otherwise, it's a general processing error
+
+    const statusCode = (error as GaxiosErrorStatus).response?.status || 500;
     return NextResponse.json(
-      { error: "Webhook processing error" },
-      { status: 500 },
+      { error: (error as Error).message },
+      { status: statusCode },
     );
   }
 }

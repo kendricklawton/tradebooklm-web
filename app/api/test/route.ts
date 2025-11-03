@@ -1,54 +1,10 @@
-// import { NextRequest, NextResponse } from "next/server";
-// import { getAuthClient } from "@/lib/gcp-auth";
-
-// export async function GET(request: NextRequest): Promise<NextResponse> {
-//   try {
-//     const TRADEBOOKLM_API_URL = process.env.TRADEBOOKLM_API_URL;
-//     if (!TRADEBOOKLM_API_URL) {
-//       throw new Error("TRADEBOOKLM_API_URL is not defined");
-//     }
-
-//     const headers = request.headers;
-//     const authToken = await getAuthToken();
-
-//     const response = await fetch(`${TRADEBOOKLM_API_URL}/test`, {
-//       method: "GET",
-//       headers: {
-//         ...headers,
-//         Authorization: `Bearer ${authToken}`,
-//       },
-//     });
-
-//     if (!response.ok) {
-//       const errorData = await response
-//         .json()
-//         .catch(() => ({ error: response.statusText }));
-//       console.error(errorData.error || response.statusText);
-//       return NextResponse.json(
-//         { error: errorData.error || response.statusText },
-//         { status: response.status },
-//       );
-//     }
-
-//     const data = await response.json();
-//     return NextResponse.json(data, { status: response.status });
-// } catch (error) {
-//   console.error(error);
-//   return NextResponse.json(
-//     { error: (error as Error).message },
-//     { status: 500 },
-//   );
-// }
-// }
-// app/api/call-test-route/route.js (or similar)
-
 import { NextResponse } from "next/server";
-import { getAuthClient } from "@/lib/gcp-auth"; // Adjust path if needed
+import { getAuthClient } from "@/lib/gcp-auth";
+import { GaxiosErrorStatus } from "@/interfaces/gaxios-error-status";
 
 export async function GET(): Promise<NextResponse> {
   try {
     const authClient = await getAuthClient();
-
     const apiUrl = `${process.env.TRADEBOOKLM_API_URL}/test`;
 
     const response = await authClient.request({
@@ -59,10 +15,11 @@ export async function GET(): Promise<NextResponse> {
     const data = response.data;
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
-    console.error(error);
+    console.error("Test Route Error:", error);
+    const statusCode = (error as GaxiosErrorStatus).response?.status || 500;
     return NextResponse.json(
       { error: (error as Error).message },
-      { status: 500 },
+      { status: statusCode },
     );
   }
 }
