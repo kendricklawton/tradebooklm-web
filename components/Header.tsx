@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getSignInUrl, withAuth } from "@workos-inc/authkit-nextjs";
 import { signOut } from "@workos-inc/authkit-nextjs";
+import { redirect } from "next/navigation";
 
 export default async function Header() {
   const { user } = await withAuth();
@@ -19,6 +20,7 @@ export default async function Header() {
         {user ? (
           <form
             action={async () => {
+              "use server";
               await signOut();
             }}
           >
@@ -30,11 +32,19 @@ export default async function Header() {
             </button>
           </form>
         ) : (
-          <Link href={signInUrl}>
-            <span className="py-2 px-4 bg-black  text-white rounded-4xl hover:bg-gray-500 cursor-pointer">
+          <form
+            action={async () => {
+              "use server";
+              redirect(signInUrl);
+            }}
+          >
+            <button
+              type="submit"
+              className="py-2 px-4 bg-black  text-white rounded-4xl hover:bg-gray-500 cursor-pointer"
+            >
               Sign in
-            </span>
-          </Link>
+            </button>
+          </form>
         )}
       </div>
     </header>
