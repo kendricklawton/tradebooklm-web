@@ -24,12 +24,6 @@ const Overview = async () => {
           >
             <span className="text-white">Try TradebookLM</span>
           </Link>
-          <Link
-            href="/test"
-            className="px-4 py-3 text-2xl bg-black hover:bg-gray-600 rounded-4xl"
-          >
-            <span className="text-white">Route To Test</span>
-          </Link>
         </div>
       </section>
 
